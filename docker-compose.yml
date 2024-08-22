@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRED_DB=finances
+    volumes:
+      - finances_pg_data:/bitnami/postgresql
+  
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'finances_redis_data:/bitnami/redis/data'
+
+  api:
+    build: .
+    container_name: api
+    volumes:
+      - ./:/usr/src/api
+    ports:
+      - 8081:8081
+    env_file:
+      - .env
+    # command: sh
+    tty: true
+    stdin_open: true
+
+volumes: 
+  finances_pg_data:
+  finances_redis_data:
