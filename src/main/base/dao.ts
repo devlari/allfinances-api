@@ -1,9 +1,9 @@
-import {Pool, PoolClient, QueryResultRow} from 'pg';
+import { Pool, PoolClient, QueryResultRow } from 'pg';
 
 export abstract class DAO {
-    public connection: PoolClient | null = null;
+  public connection: PoolClient | null = null;
 
-  constructor(public readonly connectionPool: Pool) {}
+  constructor(public readonly connectionPool: Pool) { }
 
   async openConnection(): Promise<PoolClient> {
     if (!this.connection) {
@@ -51,6 +51,20 @@ export abstract class DAO {
     if (commit) {
       await this.commit(false);
     }
+  }
+
+  async execPostSQL(sql: string, params: unknown[], commit = true): Promise<number> {
+    if (!this.connection) {
+      throw new Error('Não há conexão aberta com o banco de dados');
+    }
+
+    const result = await this.connection.query(sql, params);
+
+    if (commit) {
+      await this.commit(false);
+    }
+
+    return result.rows[0].id;
   }
 
   async query<T extends QueryResultRow>(sql: string, params: unknown[]): Promise<T[]> {

@@ -3,12 +3,25 @@ import helmet from 'helmet';
 import setupRoutes from './routes';
 import logger from '@tools/logger';
 import cors from 'cors';
+import { Pool } from 'pg';
 
 export class AppServer {
   public app: Express;
+  public connectionPool?: Pool;
 
   constructor() {
     this.app = express();
+  }
+
+  async connect(): Promise<void> {
+    this.connectionPool = new Pool({
+      user: process.env.USER,
+      host: process.env.HOST,
+      database: process.env.DATABASE,
+      password: process.env.PASSWORD,
+      port: Number(process.env.DB_PORT),
+      max: 10
+    })
   }
 
   start(port: number, host = ''): void {
@@ -36,6 +49,11 @@ export class AppServer {
   }
 
   private routes(): void {
-    setupRoutes(this.app);
+
+    if (!this.connectionPool) {
+      return;
+    }
+
+    setupRoutes(this.app, this.connectionPool);
   }
 }
