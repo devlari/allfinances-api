@@ -1,4 +1,4 @@
-import express, { Router, Request, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import { Pool } from 'pg';
 import { BankController } from './controller';
 
@@ -21,7 +21,7 @@ export function bankRoutes(
   );
 
   router.get('/banks/user/:userId', async (req: Request, res: Response) => {
-    const userId = req.query.userId;
+    const userId = req.params.userId;
 
     const HttpResponse = await controller.getFromUser(Number(userId));
 
@@ -29,7 +29,7 @@ export function bankRoutes(
   });
 
   router.get('/banks/:id', async (req: Request, res: Response) => {
-    const id = req.query.userId;
+    const id = req.params.id;
 
     const HttpResponse = await controller.getFromId(
       Number(id)

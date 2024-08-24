@@ -31,19 +31,18 @@ export class AppServer {
 
   async testConnection() {
     try {
-
       if (!this.connectionPool) {
         console.log('não há pool de conexão')
         return;
       };
 
       const client = await this.connectionPool.connect();
-      console.log('Conexão com o banco de dados bem-sucedida!');
+      logger.info('Conexão com o banco de dados bem-sucedida!');
       const result = await client.query('SELECT NOW()');
-      console.log('Data e hora atual do banco de dados:', result.rows[0]);
+      logger.info(`Data e hora atual do banco de dados: ${result.rows[0].now}`);
       client.release();
     } catch (error) {
-      console.error('Erro ao conectar ao banco de dados:', error);
+      logger.error('Erro ao conectar ao banco de dados:', error);
     }
   };
 

@@ -24,6 +24,7 @@ export class BankDAO extends DAO {
 
     async getFromUser(userId: number): Promise<Bank[]> {
         let sql = SQLGet + SQLByUser;
+
         try {
             const banks = await this.query<BankDTO>(sql, [userId]);
 

@@ -3,9 +3,9 @@ export const SQLNewBank = `
         user_id
         , name
     ) values (
-        :user_id
-        , :name
-    )`;
+        $1
+        , $2
+    ) RETURNING id`;
 
 export const SQLGet = `
     select 
@@ -17,14 +17,14 @@ export const SQLGet = `
 
 export const SQLByUser = ` where user_id = $1`;
 
-export const SQLById = ` where id = :id`;
+export const SQLById = ` where id = $1`;
 
 export const SQLEditBank = `
     update "Bank"
-        set name = :name
-    where id = :id;
+        set name = $1
+    where id = $2;
 `;
 
 export const SQLDeleteBank = `
-    delete from "Bank" where id = :id
+    delete from "Bank" where id = $1
 `
