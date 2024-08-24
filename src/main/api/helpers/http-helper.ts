@@ -1,5 +1,5 @@
 import { HttpResponse } from './http';
-import logger from '@tools/logger';
+import logger from '@/tools/logger';
 
 export const badRequest = (error: Error): HttpResponse => {
   logger.warn(`RESPONSE Bad request: ${error.message}`);

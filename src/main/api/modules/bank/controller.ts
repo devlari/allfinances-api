@@ -1,6 +1,6 @@
-import { HttpResponse } from '@main/api/helpers/http';
-import { ValidateInputSchema } from '@main/api/helpers/schema/validate-input-schema';
-import { badRequest, created, notFound, ok, serverError } from '@main/api/helpers/http-helper';
+import { HttpResponse } from '@/main/api/helpers/http';
+import { ValidateInputSchema } from '@/main/api/helpers/schema/validate-input-schema';
+import { badRequest, created, notFound, ok, serverError } from '@/main/api/helpers/http-helper';
 import { Pool, PoolClient } from 'pg';
 import { PostBank } from './types';
 import { PostBankSchema } from './schema';

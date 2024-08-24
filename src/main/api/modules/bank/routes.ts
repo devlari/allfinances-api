@@ -20,7 +20,7 @@ export function bankRoutes(
     }
   );
 
-  router.get('/banks/:userId', async (req: Request, res: Response) => {
+  router.get('/banks/user/:userId', async (req: Request, res: Response) => {
     const userId = req.query.userId;
 
     const HttpResponse = await controller.getFromUser(Number(userId));

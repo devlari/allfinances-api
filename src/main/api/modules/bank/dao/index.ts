@@ -1,4 +1,4 @@
-import { DAO } from '@main/base/dao';
+import { DAO } from '@/main/base/dao';
 import { Pool } from 'pg';
 import { Bank, BankDTO, PostBank } from '../types';
 import { SQLById, SQLByUser, SQLDeleteBank, SQLEditBank, SQLGet, SQLNewBank } from './sql';

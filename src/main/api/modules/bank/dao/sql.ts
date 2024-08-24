@@ -10,12 +10,12 @@ export const SQLNewBank = `
 export const SQLGet = `
     select 
         id
-        , user_id as 'userId'
+        , user_id as userId
         , "name" 
     from "Bank" 
 `
 
-export const SQLByUser = ` where user_id = :user_id`;
+export const SQLByUser = ` where user_id = $1`;
 
 export const SQLById = ` where id = :id`;
 
