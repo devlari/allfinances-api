@@ -1,6 +1,6 @@
 export type PostBank = {
     name: string;
-    userId: number;
+    userId?: number;
 }
 
 export type Bank = {

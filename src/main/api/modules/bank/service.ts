@@ -3,94 +3,80 @@ import { Bank, PostBank } from './types';
 import { BankDAO } from './dao';
 
 export class BankService {
-    constructor(private connectionPool: Pool) { }
+    constructor(private bankDAO: BankDAO) { }
 
     async newBank(bank: PostBank): Promise<Bank> {
-        const bankDAO = this.getDao();
-
         try {
-            await bankDAO.openConnection();
+            await this.bankDAO.openConnection();
 
-            const response = await bankDAO.newBank(bank);
+            const response = await this.bankDAO.newBank(bank);
 
-            await bankDAO.commit();
-            await bankDAO.closeConnection();
+            await this.bankDAO.commit();
+            await this.bankDAO.closeConnection();
 
             return response;
         } catch (error) {
-            await bankDAO.rollback();
-            await bankDAO.closeConnection();
+            await this.bankDAO.rollback();
+            await this.bankDAO.closeConnection();
             throw error;
         }
     }
 
     async getFromUser(userId: number): Promise<Bank[]> {
-        const areasDAO = this.getDao();
-
         try {
-            await areasDAO.openConnection();
-            const response = await areasDAO.getFromUser(userId);
-            await areasDAO.closeConnection();
+            await this.bankDAO.openConnection();
+            const response = await this.bankDAO.getFromUser(userId);
+            await this.bankDAO.closeConnection();
 
             return response;
         } catch (error) {
-            await areasDAO.closeConnection();
+            await this.bankDAO.closeConnection();
             throw error;
         }
     }
 
     async getFromId(id: number): Promise<Bank | null> {
-        const areasDAO = this.getDao();
-
         try {
-            await areasDAO.openConnection();
-            const response = await areasDAO.getFromId(id);
-            await areasDAO.closeConnection();
+            await this.bankDAO.openConnection();
+            const response = await this.bankDAO.getFromId(id);
+            await this.bankDAO.closeConnection();
 
             return response;
         } catch (error) {
-            await areasDAO.closeConnection();
+            await this.bankDAO.closeConnection();
             throw error;
         }
     }
 
     async editBank(id: number, bank: PostBank): Promise<Bank> {
-        const areasDAO = this.getDao();
-
         try {
-            await areasDAO.openConnection();
+            await this.bankDAO.openConnection();
 
-            const response = await areasDAO.editBank(id, bank);
+            const response = await this.bankDAO.editBank(id, bank);
 
-            await areasDAO.commit();
-            await areasDAO.closeConnection();
+            await this.bankDAO.commit();
+            await this.bankDAO.closeConnection();
 
             return response;
         } catch (error) {
-            await areasDAO.rollback();
-            await areasDAO.closeConnection();
+            await this.bankDAO.rollback();
+            await this.bankDAO.closeConnection();
             throw error;
         }
     }
 
     async deleteBank(cod: number): Promise<void> {
-        const areasDAO = this.getDao();
-
         try {
-            await areasDAO.openConnection();
-            const response = await areasDAO.deleteBank(cod);
-            await areasDAO.commit();
-            await areasDAO.closeConnection();
+            await this.bankDAO.openConnection();
+            const response = await this.bankDAO.deleteBank(cod);
+            await this.bankDAO.commit();
+            await this.bankDAO.closeConnection();
 
             return response;
         } catch (error) {
-            await areasDAO.rollback();
-            await areasDAO.closeConnection();
+            await this.bankDAO.rollback();
+            await this.bankDAO.closeConnection();
             throw error;
         }
-    }
-
-    private getDao(): BankDAO {
-        return new BankDAO(this.connectionPool);
     }
 }

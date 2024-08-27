@@ -1,12 +1,16 @@
 import { Router, Request, Response } from 'express';
 import { Pool } from 'pg';
 import { BankController } from './controller';
+import { BankDAO } from './dao';
+import { BankService } from './service';
 
 export function bankRoutes(
   router: Router,
   connectionPool: Pool
 ): void {
-  const controller = new BankController(connectionPool);
+  const dao = new BankDAO(connectionPool);
+  const service = new BankService(dao);
+  const controller = new BankController(service);
 
   router.post(
     '/bank',

@@ -1,13 +1,12 @@
 import { HttpResponse } from '@/main/api/helpers/http';
 import { ValidateInputSchema } from '@/main/api/helpers/schema/validate-input-schema';
 import { badRequest, created, notFound, ok, serverError } from '@/main/api/helpers/http-helper';
-import { Pool, PoolClient } from 'pg';
 import { PostBank } from './types';
 import { PostBankSchema } from './schema';
 import { BankService } from './service';
 
 export class BankController {
-  constructor(private connectionPool: Pool) { }
+  constructor(private bankService: BankService) { }
 
   async newBank(
     bank: PostBank,
@@ -19,9 +18,7 @@ export class BankController {
     }
 
     try {
-      const bankService = this.getService();
-      const response = await bankService.newBank(bank);
-
+      const response = await this.bankService.newBank(bank);
       return created(response);
     }
     catch (error) {
@@ -31,9 +28,12 @@ export class BankController {
 
   async getFromUser(userId: number): Promise<HttpResponse> {
     try {
-      const bankService = this.getService();
-      const response = await bankService.getFromUser(userId);
 
+      if (!userId || Number.isNaN(userId)) {
+        return badRequest(new Error("ID de usuário inválido"));
+      }
+
+      const response = await this.bankService.getFromUser(userId);
       return ok(response);
     } catch (error) {
       return serverError(error, 'Erro ao capturar bancos do usuário');
@@ -42,8 +42,12 @@ export class BankController {
 
   async getFromId(id: number): Promise<HttpResponse> {
     try {
-      const bankService = this.getService();
-      const response = await bankService.getFromId(id);
+
+      if (!id || Number.isNaN(id)) {
+        return badRequest(new Error("ID inválido"));
+      }
+
+      const response = await this.bankService.getFromId(id);
 
       if (!response) {
         return notFound();
@@ -65,15 +69,18 @@ export class BankController {
       return badRequest(validateError);
     }
 
+    if (!id || Number.isNaN(id)) {
+      return badRequest(new Error("ID inválido"));
+    }
+
     try {
-      const bankService = this.getService();
-      const bankExists = await bankService.getFromId(id);
+      const bankExists = await this.bankService.getFromId(id);
 
       if (!bankExists) {
         return notFound();
       }
 
-      const response = await bankService.editBank(id, bank);
+      const response = await this.bankService.editBank(id, bank);
 
       return ok(response);
     } catch (error) {
@@ -83,22 +90,22 @@ export class BankController {
 
   async deleteBank(id: number): Promise<HttpResponse> {
     try {
-      const bankService = this.getService();
-      const bankExists = await bankService.getFromId(id);
+
+      if (!id || Number.isNaN(id)) {
+        return badRequest(new Error("ID inválido"));
+      }
+
+      const bankExists = await this.bankService.getFromId(id);
 
       if (!bankExists) {
         return notFound();
       }
 
-      const response = await bankService.deleteBank(id);
+      const response = await this.bankService.deleteBank(id);
 
       return ok(response);
     } catch (error) {
       return serverError(error, 'Erro ao deletar banco');
     }
-  }
-
-  private getService(): BankService {
-    return new BankService(this.connectionPool);
   }
 }
