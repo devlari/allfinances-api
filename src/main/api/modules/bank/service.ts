@@ -1,4 +1,3 @@
-import { Pool, PoolClient } from 'pg';
 import { Bank, PostBank } from './types';
 import { BankDAO } from './dao';
 
